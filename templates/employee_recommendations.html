@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Recommendations - {{ employee.name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('employees') }}">Employees</a></li>
+            <li class="breadcrumb-item active">{{ employee.name }}</li>
+        </ol>
+    </nav>
+    <h1><i class="fas fa-user me-2"></i>{{ employee.name }}</h1>
+    <p class="text-muted">{{ employee.role }} • {{ employee.department }} • {{ employee.experience_years }} years experience</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5><i class="fas fa-user-circle me-2"></i>Profile</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Role:</strong> {{ employee.role }}</p>
+                <p><strong>Department:</strong> {{ employee.department }}</p>
+                <p><strong>Experience:</strong> {{ employee.experience_years }} years</p>
+                <p><strong>Location:</strong> {{ employee.location }}</p>
+                <p><strong>Salary:</strong> ${{ "{:,}".format(employee.current_salary|int) }}</p>
+                <p><strong>Career Goal:</strong><br>{{ employee.career_aspirations }}</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-graduation-cap me-2"></i>Development Paths</h5>
+            </div>
+            <div class="card-body">
+                {% for dev_path in development_paths %}
+                <div class="border-bottom pb-2 mb-3">
+                    <h6>{{ dev_path.development_path.path_name }}</h6>
+                    <p class="small">{{ dev_path.development_path.description[:100] }}...</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">{{ dev_path.development_path.estimated_duration_months }} months</small>
+                        <span class="badge bg-primary">{{ (dev_path.alignment_score * 100)|round }}% match</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-brain me-2"></i>Recommended Projects</h5>
+            </div>
+            <div class="card-body">
+                {% for rec in recommendations %}
+                <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1">{{ rec.project.project_name }}</h6>
+                            <span class="badge {% if rec.project.priority == 'High' %}bg-danger{% elif rec.project.priority == 'Medium' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ rec.project.priority }}
+                            </span>
+                        </div>
+                        <p class="mb-2">{{ rec.project.description[:120] }}{% if rec.project.description|length > 120 %}...{% endif %}</p>
+
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <small class="text-muted">Duration:</small><br>
+                                <strong>{{ rec.project.estimated_duration_months }} months</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <small class="text-muted">Budget:</small><br>
+                                <strong>${{ "{:,}".format(rec.project.budget|int) }}</strong>
+                            </div>
+                            <div class="col-md-4">
+                                <small class="text-muted">Status:</small><br>
+                                <span class="badge {% if rec.project.status == 'Active' %}bg-success{% elif rec.project.status == 'Planning' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                    {{ rec.project.status }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <small class="text-muted">Skill Match:</small>
+                                <div class="progress mb-1" style="height: 6px;">
+                                    <div class="progress-bar bg-primary" style="width: {{ (rec.skill_match * 100)|round }}%"></div>
+                                </div>
+                                <small>{{ (rec.skill_match * 100)|round }}%</small>
+                            </div>
+                            <div class="col-md-4">
+                                <small class="text-muted">Career Align:</small>
+                                <div class="progress mb-1" style="height: 6px;">
+                                    <div class="progress-bar bg-info" style="width: {{ (rec.career_alignment * 100)|round }}%"></div>
+                                </div>
+                                <small>{{ (rec.career_alignment * 100)|round }}%</small>
+                            </div>
+                            <div class="col-md-4">
+                                <small class="text-muted">Overall:</small>
+                                <div class="progress mb-1" style="height: 6px;">
+                                    <div class="progress-bar bg-{% if rec.overall_score >= 0.8 %}success{% elif rec.overall_score >= 0.6 %}warning{% else %}danger{% endif %}" 
+                                         style="width: {{ (rec.overall_score * 100)|round }}%"></div>
+                                </div>
+                                <small>{{ (rec.overall_score * 100)|round }}%</small>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <small class="text-muted">{{ rec.components.recommendation }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

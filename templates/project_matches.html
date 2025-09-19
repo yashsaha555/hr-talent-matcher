@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Project Matches - {{ project.project_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('projects') }}">Projects</a></li>
+            <li class="breadcrumb-item active">{{ project.project_name }}</li>
+        </ol>
+    </nav>
+    <h1><i class="fas fa-project-diagram me-2"></i>{{ project.project_name }}</h1>
+    <p class="text-muted">{{ project.description }}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Project Details</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Priority:</strong> 
+                    <span class="badge {% if project.priority == 'High' %}bg-danger{% elif project.priority == 'Medium' %}bg-warning{% else %}bg-info{% endif %}">
+                        {{ project.priority }}
+                    </span>
+                </p>
+                <p><strong>Status:</strong> 
+                    <span class="badge {% if project.status == 'Active' %}bg-success{% elif project.status == 'Planning' %}bg-warning{% else %}bg-secondary{% endif %}">
+                        {{ project.status }}
+                    </span>
+                </p>
+                <p><strong>Duration:</strong> {{ project.estimated_duration_months }} months</p>
+                <p><strong>Budget:</strong> ${{ "{:,}".format(project.budget|int) }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-brain me-2"></i>AI-Matched Team Members</h5>
+            </div>
+            <div class="card-body">
+                {% for match in matches %}
+                <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1">{{ match.employee.name }}</h6>
+                        <p class="mb-1"><strong>{{ match.employee.role }}</strong> • {{ match.employee.department }}</p>
+                        <p class="text-muted mb-2">{{ match.employee.experience_years }} years experience • {{ match.employee.location }}</p>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">Skill Match:</small>
+                                <div class="progress mb-1" style="height: 6px;">
+                                    <div class="progress-bar bg-primary" style="width: {{ (match.skill_match * 100)|round }}%"></div>
+                                </div>
+                                <small>{{ (match.skill_match * 100)|round }}%</small>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted">Experience:</small>
+                                <div class="progress mb-1" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: {{ (match.experience_compatibility * 100)|round }}%"></div>
+                                </div>
+                                <small>{{ (match.experience_compatibility * 100)|round }}%</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ms-3 text-center">
+                        <div class="match-score text-{% if match.overall_score >= 0.8 %}success{% elif match.overall_score >= 0.6 %}warning{% else %}danger{% endif %}">
+                            {{ (match.overall_score * 100)|round }}%
+                        </div>
+                        <small class="text-muted">Overall Match</small>
+                        <div class="mt-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="showSkillGap({{ match.employee.id }}, {{ project.id }})">
+                                <i class="fas fa-chart-bar me-1"></i>Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for skill gap details -->
+<div class="modal fade" id="skillGapModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Skill Gap Analysis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="skillGapContent">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showSkillGap(employeeId, projectId) {
+    const modal = new bootstrap.Modal(document.getElementById('skillGapModal'));
+    document.getElementById('skillGapContent').innerHTML = 'Loading...';
+    modal.show();
+
+    fetch(`/api/skill-gap/${employeeId}/${projectId}`)
+        .then(response => response.json())
+        .then(data => {
+            let content = '<div class="row">';
+
+            if (data.strengths && data.strengths.length > 0) {
+                content += '<div class="col-md-6"><h6>Strengths</h6><ul class="list-group">';
+                data.strengths.forEach(strength => {
+                    content += `<li class="list-group-item d-flex justify-content-between">
+                        ${strength.skill}
+                        <span class="badge bg-success">${strength.current_level}/${strength.required_level}</span>
+                    </li>`;
+                });
+                content += '</ul></div>';
+            }
+
+            if (data.gaps && data.gaps.length > 0) {
+                content += '<div class="col-md-6"><h6>Skill Gaps</h6><ul class="list-group">';
+                data.gaps.forEach(gap => {
+                    content += `<li class="list-group-item d-flex justify-content-between">
+                        ${gap.skill}
+                        <span class="badge bg-warning">${gap.current_level}/${gap.required_level}</span>
+                    </li>`;
+                });
+                content += '</ul></div>';
+            }
+
+            content += '</div>';
+            document.getElementById('skillGapContent').innerHTML = content;
+        })
+        .catch(error => {
+            document.getElementById('skillGapContent').innerHTML = 'Error loading skill gap data.';
+        });
+}
+</script>
+{% endblock %}

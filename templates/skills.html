@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Skills - HR Talent Matching System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-cogs me-2"></i>Skills Database</h1>
+    <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Skill</button>
+</div>
+
+<div class="row">
+    {% set technical_skills = skills | selectattr("category", "equalto", "Technical") | list %}
+    {% set soft_skills = skills | selectattr("category", "equalto", "Soft Skills") | list %}
+    {% set marketing_skills = skills | selectattr("category", "equalto", "Marketing") | list %}
+    {% set design_skills = skills | selectattr("category", "equalto", "Design") | list %}
+    {% set sales_skills = skills | selectattr("category", "equalto", "Sales") | list %}
+    {% set analytics_skills = skills | selectattr("category", "equalto", "Analytics") | list %}
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-code me-2"></i>Technical Skills ({{ technical_skills|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% for skill in technical_skills %}
+                <span class="badge bg-primary me-2 mb-2">{{ skill.skill_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-handshake me-2"></i>Soft Skills ({{ soft_skills|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% for skill in soft_skills %}
+                <span class="badge bg-success me-2 mb-2">{{ skill.skill_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bullhorn me-2"></i>Marketing Skills ({{ marketing_skills|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% for skill in marketing_skills %}
+                <span class="badge bg-warning me-2 mb-2">{{ skill.skill_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mt-3">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-palette me-2"></i>Design Skills ({{ design_skills|length }})</h5>
+            </div>
+            <div class="card-body">
+                {% for skill in design_skills %}
+                <span class="badge bg-info me-2 mb-2">{{ skill.skill_name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

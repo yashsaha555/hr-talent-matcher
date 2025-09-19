@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Employees - HR Talent Matching System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-users me-2"></i>Employees</h1>
+    <button class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Employee</button>
+</div>
+
+<div class="row">
+    {% for employee in employees %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">{{ employee.name }}</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Role:</strong> {{ employee.role }}</p>
+                <p><strong>Department:</strong> {{ employee.department }}</p>
+                <p><strong>Experience:</strong> {{ employee.experience_years }} years</p>
+                <p><strong>Location:</strong> {{ employee.location }}</p>
+                <p><strong>Career Goal:</strong> {{ employee.career_aspirations }}</p>
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{{ url_for('match_employee', employee_id=employee.id) }}" 
+                       class="btn btn-primary btn-sm">
+                        <i class="fas fa-brain me-2"></i>Find Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

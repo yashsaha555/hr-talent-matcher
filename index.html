@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered HR Talent Matching System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container flex justify-between items-center">
+            <div class="nav-brand">
+                <h2>TalentMatch AI</h2>
+            </div>
+            <div class="nav-menu">
+                <button class="nav-btn active" onclick="showSection('dashboard')">Dashboard</button>
+                <button class="nav-btn" onclick="showSection('employees')">Employees</button>
+                <button class="nav-btn" onclick="showSection('projects')">Projects</button>
+                <button class="nav-btn" onclick="showSection('skills')">Skills</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container main-content">
+        
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <div class="section-header">
+                <h1>Dashboard Overview</h1>
+                <p class="section-subtitle">AI-Powered HR Talent Matching System Performance</p>
+            </div>
+            
+            <!-- Key Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEmployees">5</div>
+                    <div class="stat-label">Total Employees</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalProjects">4</div>
+                    <div class="stat-label">Active Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSkills">25</div>
+                    <div class="stat-label">Skills Tracked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgMatchScore">87%</div>
+                    <div class="stat-label">Avg Match Score</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Skills Distribution by Category</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="skillsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Project Priority Distribution</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="chart-container" style="position: relative; height: 300px;">
+                            <canvas id="projectsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Architecture -->
+            <div class="card">
+                <div class="card__header">
+                    <h3>System Architecture Overview</h3>
+                </div>
+                <div class="card__body">
+                    <img src="https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/2a8a24c17dec38d9db0fbbe297cac9cf/7270667a-a7e9-4acd-8ae9-2b354e65f9b3/d06e1e0c.png" alt="AI-Powered HR System Architecture" class="architecture-image">
+                </div>
+            </div>
+        </section>
+
+        <!-- Employees Section -->
+        <section id="employees" class="section">
+            <div class="section-header">
+                <h1>Employee Management</h1>
+                <p class="section-subtitle">Browse employee profiles and find optimal project matches</p>
+            </div>
+
+            <div class="search-controls">
+                <input type="text" class="form-control" placeholder="Search employees by name or skills..." id="employeeSearch">
+                <select class="form-control" id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Product">Product</option>
+                </select>
+            </div>
+
+            <div id="employeesList" class="employees-grid">
+                <!-- Employees will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="section">
+            <div class="section-header">
+                <h1>Project Management</h1>
+                <p class="section-subtitle">Browse projects and find optimal team matches</p>
+            </div>
+
+            <div class="search-controls">
+                <input type="text" class="form-control" placeholder="Search projects..." id="projectSearch">
+                <select class="form-control" id="priorityFilter">
+                    <option value="">All Priorities</option>
+                    <option value="High">High Priority</option>
+                    <option value="Medium">Medium Priority</option>
+                    <option value="Low">Low Priority</option>
+                </select>
+            </div>
+
+            <div id="projectsList" class="projects-grid">
+                <!-- Projects will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="section">
+            <div class="section-header">
+                <h1>Skills Overview</h1>
+                <p class="section-subtitle">Comprehensive view of skills across the organization</p>
+            </div>
+
+            <div class="skills-categories">
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Technical Skills</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="skills-tags" id="technicalSkills">
+                            <!-- Technical skills will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Soft Skills</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="skills-tags" id="softSkills">
+                            <!-- Soft skills will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Marketing Skills</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="skills-tags" id="marketingSkills">
+                            <!-- Marketing skills will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card__header">
+                        <h3>Design Skills</h3>
+                    </div>
+                    <div class="card__body">
+                        <div class="skills-tags" id="designSkills">
+                            <!-- Design skills will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Modal for Employee Project Matches -->
+    <div id="employeeMatchModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>AI Project Recommendations</h2>
+                <button class="modal-close" onclick="closeModal('employeeMatchModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="employee-info" id="modalEmployeeInfo">
+                    <!-- Employee info will be populated -->
+                </div>
+                <div class="recommendations" id="projectRecommendations">
+                    <!-- Recommendations will be populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Project Team Matches -->
+    <div id="projectMatchModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>AI Team Recommendations</h2>
+                <button class="modal-close" onclick="closeModal('projectMatchModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="project-info" id="modalProjectInfo">
+                    <!-- Project info will be populated -->
+                </div>
+                <div class="recommendations" id="employeeRecommendations">
+                    <!-- Recommendations will be populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Skill Gap Analysis -->
+    <div id="skillGapModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Skill Gap Analysis & Development Path</h2>
+                <button class="modal-close" onclick="closeModal('skillGapModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="skillGapContent">
+                    <!-- Skill gap analysis will be populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

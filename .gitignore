@@ -1,0 +1,61 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+.env
+.env.*
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Node.js
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CSV and data files
+*.csv
+
+# Images
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Misc
+*.bak
+*.swp
+*.swo
+
+# HTML/JS build artifacts
+/dist/
+/build/
+
+# Ignore architecture diagrams
+hr_system_architecture.png
+
+# Others
+*.out
+*.tmp
+*.cache
+
+# Ignore test results
+*.pytest_cache/
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+coverage.xml
+
+# Ignore project specific files
+# Add more patterns as needed

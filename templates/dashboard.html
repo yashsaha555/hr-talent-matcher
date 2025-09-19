@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - HR Talent Matching System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
+    <small class="text-muted">AI-Powered HR Talent Matching & Development System</small>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                <h3>{{ stats.employees }}</h3>
+                <p class="text-muted">Employees</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-project-diagram fa-3x text-success mb-3"></i>
+                <h3>{{ stats.projects }}</h3>
+                <p class="text-muted">Projects</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-cogs fa-3x text-info mb-3"></i>
+                <h3>{{ stats.skills }}</h3>
+                <p class="text-muted">Skills Tracked</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-play-circle fa-3x text-warning mb-3"></i>
+                <h3>{{ stats.active_projects }}</h3>
+                <p class="text-muted">Active Projects</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-line me-2"></i>System Features</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        AI-Powered Skill Matching
+                        <span class="badge bg-primary rounded-pill">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Career Development Paths
+                        <span class="badge bg-success rounded-pill">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Skill Gap Analysis
+                        <span class="badge bg-info rounded-pill">Active</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Project Recommendations
+                        <span class="badge bg-warning rounded-pill">Active</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-brain me-2"></i>AI Matching Algorithm</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">Our AI system uses multiple factors to match talent:</p>
+                <div class="progress-stacked mb-2">
+                    <div class="progress" role="progressbar" style="width: 45%">
+                        <div class="progress-bar bg-primary">Skill Match (45%)</div>
+                    </div>
+                </div>
+                <div class="progress-stacked mb-2">
+                    <div class="progress" role="progressbar" style="width: 25%">
+                        <div class="progress-bar bg-success">Experience (25%)</div>
+                    </div>
+                </div>
+                <div class="progress-stacked mb-2">
+                    <div class="progress" role="progressbar" style="width: 20%">
+                        <div class="progress-bar bg-info">Career Alignment (20%)</div>
+                    </div>
+                </div>
+                <div class="progress-stacked mb-3">
+                    <div class="progress" role="progressbar" style="width: 10%">
+                        <div class="progress-bar bg-warning">Availability (10%)</div>
+                    </div>
+                </div>
+                <p class="small text-muted">Algorithm uses TF-IDF vectorization, cosine similarity, and weighted scoring for optimal matches.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-rocket me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{{ url_for('employees') }}" class="btn btn-primary w-100 mb-2">
+                            <i class="fas fa-search me-2"></i>Find Employee Matches
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('projects') }}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-project-diagram me-2"></i>Match Project Team
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('skills') }}" class="btn btn-info w-100 mb-2">
+                            <i class="fas fa-chart-bar me-2"></i>Analyze Skill Gaps
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
