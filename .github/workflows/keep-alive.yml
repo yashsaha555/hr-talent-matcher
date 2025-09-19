@@ -1,0 +1,13 @@
+name: Keep Render Alive
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"  # every 10 minutes
+  workflow_dispatch:        # lets you trigger manually too
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl Render App
+        run: curl -s https://hr-talent-matcher.onrender.com > /dev/null
