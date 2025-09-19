@@ -1,0 +1,11 @@
+employee_id,name,department,role,experience_years,current_salary,location,career_aspirations
+1,Alice Johnson,Engineering,Senior Developer,5,90000,New York,Tech Lead
+2,Bob Smith,Marketing,Marketing Manager,7,75000,San Francisco,VP Marketing
+3,Carol Davis,Data Science,Data Scientist,4,85000,Boston,Senior Data Scientist
+4,David Wilson,Engineering,DevOps Engineer,6,88000,Seattle,Cloud Architect
+5,Emma Brown,Product,Product Manager,8,95000,Austin,VP Product
+6,Frank Miller,Sales,Sales Manager,9,80000,Chicago,Regional Sales Director
+7,Grace Lee,Data Science,ML Engineer,3,92000,Los Angeles,AI Research Lead
+8,Henry Taylor,Engineering,Frontend Developer,4,75000,Denver,Full-Stack Architect
+9,Ivy Chen,Marketing,Content Marketer,5,65000,Portland,Marketing Director
+10,Jack Thompson,Product,UX Designer,6,82000,Miami,Chief Design Officer

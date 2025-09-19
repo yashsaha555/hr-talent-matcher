@@ -1,0 +1,9 @@
+path_id,path_name,description,estimated_duration_months,target_roles
+1,Machine Learning Engineer Track,Advanced ML and AI development skills for senior technical roles,8,"Senior ML Engineer, AI Research Lead"
+2,Full-Stack Developer Track,Comprehensive full-stack development including modern frameworks,6,"Senior Full-Stack Developer, Tech Lead"
+3,Data Science Leadership Track,Leadership and advanced analytics skills for data science management,10,"Data Science Manager, Chief Data Officer"
+4,Cloud Architecture Track,Enterprise cloud solutions and infrastructure management,7,"Cloud Architect, Principal Engineer"
+5,Product Management Track,Strategic product management and cross-functional leadership,9,"Senior Product Manager, VP Product"
+6,Marketing Leadership Track,Advanced marketing strategy and team management skills,8,"Marketing Director, VP Marketing"
+7,Sales Management Track,Sales leadership and business development expertise,6,"Regional Sales Director, VP Sales"
+8,UX/UI Design Track,Advanced design thinking and user experience optimization,7,"Senior UX Designer, Design Director"

@@ -1,0 +1,9 @@
+project_id,project_name,description,priority,estimated_duration_months,budget,status
+1,AI-Powered Customer Service Bot,Build an intelligent chatbot for customer support using NLP and ML,High,6,150000,Planning
+2,Mobile E-commerce Platform,Develop a React Native mobile app for e-commerce with real-time features,Medium,4,100000,Active
+3,Data Analytics Dashboard,Create interactive dashboards for business intelligence and analytics,High,3,75000,Planning
+4,Cloud Infrastructure Migration,Migrate legacy systems to AWS cloud infrastructure,Medium,5,120000,Active
+5,Marketing Campaign Automation,Automate marketing workflows and campaign management,Low,2,50000,Completed
+6,Sales CRM Enhancement,Enhance CRM system with new features and integrations,Medium,3,80000,Planning
+7,Machine Learning Recommendation System,Build personalized recommendation engine using deep learning,High,8,200000,Planning
+8,User Experience Redesign,Redesign user interface and improve user experience across platforms,Medium,4,90000,Active

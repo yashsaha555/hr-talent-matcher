@@ -23,9 +23,6 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# CSV and data files
-*.csv
-
 # Images
 *.png
 *.jpg

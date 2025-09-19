@@ -1,0 +1,31 @@
+skill_id,skill_name,category
+1,Python,Technical
+2,JavaScript,Technical
+3,React,Technical
+4,Machine Learning,Technical
+5,SQL,Technical
+6,AWS,Technical
+7,Docker,Technical
+8,Kubernetes,Technical
+9,Data Analysis,Technical
+10,Project Management,Soft Skills
+11,Marketing Strategy,Marketing
+12,SEO,Marketing
+13,Content Creation,Marketing
+14,Salesforce,Sales
+15,Tableau,Analytics
+16,TensorFlow,Technical
+17,PyTorch,Technical
+18,Node.js,Technical
+19,MongoDB,Technical
+20,PostgreSQL,Technical
+21,Git,Technical
+22,Agile,Soft Skills
+23,UI/UX Design,Design
+24,Figma,Design
+25,Adobe Creative Suite,Design
+26,Leadership,Soft Skills
+27,Communication,Soft Skills
+28,Problem Solving,Soft Skills
+29,Critical Thinking,Soft Skills
+30,Team Collaboration,Soft Skills
