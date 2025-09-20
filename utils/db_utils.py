@@ -1,4 +1,5 @@
-from app import db
+# Import db from flask_sqlalchemy directly to avoid circular imports
+from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from datetime import datetime
 

@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}Career Planning - SkillBridge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-route me-2"></i>Career Planning</h1>
+    <small class="text-muted">AI-Powered Career Development</small>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user-tie me-2"></i>Career Path Prediction</h5>
+            </div>
+            <div class="card-body">
+                <form id="careerForm">
+                    <div class="mb-3">
+                        <label for="employee_id" class="form-label">Select Employee</label>
+                        <select class="form-select" id="employee_id" name="employee_id" required>
+                            <option value="">Choose an employee...</option>
+                            {% for employee in employees %}
+                            <option value="{{ employee.id }}" 
+                                    data-role="{{ employee.role }}"
+                                    data-experience="{{ employee.experience_years }}"
+                                    data-aspirations="{{ employee.career_aspirations or 'Not specified' }}">
+                                {{ employee.name }} - {{ employee.role }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div id="employeeDetails" class="mb-3" style="display: none;">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6>Employee Profile:</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <small><strong>Current Role:</strong> <span id="employeeRole"></span></small><br>
+                                        <small><strong>Experience:</strong> <span id="employeeExperience"></span> years</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small><strong>Career Aspirations:</strong></small><br>
+                                        <small id="employeeAspirations" class="text-muted"></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-crystal-ball me-2"></i>Predict Career Path
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-brain me-2"></i>AI Career Analysis</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">Our AI analyzes:</p>
+                <ul class="list-unstyled small">
+                    <li><i class="fas fa-check text-primary me-2"></i>Current skill set</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Performance history</li>
+                    <li><i class="fas fa-check text-info me-2"></i>Career aspirations</li>
+                    <li><i class="fas fa-check text-warning me-2"></i>Market trends</li>
+                    <li><i class="fas fa-check text-secondary me-2"></i>Skill acquisition rate</li>
+                </ul>
+                
+                <div class="mt-3">
+                    <h6>Available Career Paths:</h6>
+                    <div class="small">
+                        {% for path in career_paths %}
+                        <div class="mb-2">
+                            <strong>{{ path.path_name }}</strong><br>
+                            <small class="text-muted">{{ path.starting_role }} → {{ path.target_role }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4" id="careerResults" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-map me-2"></i>Career Path Recommendations</h5>
+            </div>
+            <div class="card-body" id="resultsContent">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show employee details when employee is selected
+document.getElementById('employee_id').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const detailsDiv = document.getElementById('employeeDetails');
+    
+    if (selectedOption.value) {
+        document.getElementById('employeeRole').textContent = selectedOption.dataset.role;
+        document.getElementById('employeeExperience').textContent = selectedOption.dataset.experience;
+        document.getElementById('employeeAspirations').textContent = selectedOption.dataset.aspirations;
+        detailsDiv.style.display = 'block';
+    } else {
+        detailsDiv.style.display = 'none';
+    }
+});
+
+document.getElementById('careerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const employeeId = formData.get('employee_id');
+    const submitBtn = this.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analyzing...';
+    submitBtn.disabled = true;
+    
+    fetch(`/api/career-prediction/${employeeId}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.career_predictions || data.current_readiness_score !== undefined) {
+            displayCareerResults(data);
+            document.getElementById('careerResults').style.display = 'block';
+        } else {
+            alert('Error: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while analyzing career path.');
+    })
+    .finally(() => {
+        // Reset button
+        submitBtn.innerHTML = '<i class="fas fa-crystal-ball me-2"></i>Predict Career Path';
+        submitBtn.disabled = false;
+    });
+});
+
+function displayCareerResults(data) {
+    const resultsContent = document.getElementById('resultsContent');
+    
+    let html = '<div class="row">';
+    
+    // Current Readiness Score
+    if (data.current_readiness_score !== undefined) {
+        const readinessPercentage = Math.round(data.current_readiness_score * 100);
+        const readinessColor = readinessPercentage >= 80 ? 'success' : readinessPercentage >= 60 ? 'warning' : 'info';
+        
+        html += '<div class="col-md-4">';
+        html += '<div class="card bg-light text-center">';
+        html += '<div class="card-body">';
+        html += '<h5>Career Readiness</h5>';
+        html += `<div class="progress mb-2" style="height: 25px;">
+                    <div class="progress-bar bg-${readinessColor}" role="progressbar" 
+                         style="width: ${readinessPercentage}%">${readinessPercentage}%</div>
+                 </div>`;
+        html += '<small class="text-muted">Overall advancement readiness</small>';
+        html += '</div></div></div>';
+    }
+    
+    // Career Predictions
+    html += '<div class="col-md-8">';
+    if (data.career_predictions && data.career_predictions.length > 0) {
+        html += '<h6>Recommended Career Paths:</h6>';
+        
+        data.career_predictions.forEach((prediction, index) => {
+            const successPercentage = Math.round(prediction.success_probability * 100);
+            const successColor = successPercentage >= 80 ? 'success' : successPercentage >= 60 ? 'warning' : 'secondary';
+            
+            html += `<div class="card mb-3 ${index === 0 ? 'border-primary' : ''}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6 class="card-title">
+                                        ${prediction.target_role}
+                                        ${index === 0 ? '<span class="badge bg-primary ms-2">Top Match</span>' : ''}
+                                    </h6>
+                                    <p class="card-text small text-muted">
+                                        Estimated timeline: ${prediction.estimated_timeline_months} months
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="mb-2">
+                                        <small>Success Probability</small>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-${successColor}" role="progressbar" 
+                                                 style="width: ${successPercentage}%">${successPercentage}%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </div>`;
+        });
+    } else {
+        html += '<p class="text-muted">No career predictions available.</p>';
+    }
+    html += '</div>';
+    
+    html += '</div>';
+    
+    // Development Recommendations Section
+    html += '<div class="row mt-4">';
+    html += '<div class="col-12">';
+    html += '<h6>Development Recommendations:</h6>';
+    html += '<div class="row">';
+    
+    // Skills to Develop
+    html += '<div class="col-md-6">';
+    html += '<div class="card">';
+    html += '<div class="card-header">';
+    html += '<h6><i class="fas fa-graduation-cap me-2"></i>Skills to Develop</h6>';
+    html += '</div>';
+    html += '<div class="card-body">';
+    html += '<p class="small text-muted">Based on your career goals:</p>';
+    html += '<div class="mb-2">';
+    // Sample skills - in a real implementation, this would come from the API
+    const sampleSkills = ['Leadership', 'Strategic Planning', 'Data Analysis', 'Project Management'];
+    sampleSkills.forEach(skill => {
+        html += `<span class="badge bg-warning me-1 mb-1">${skill}</span>`;
+    });
+    html += '</div>';
+    html += '</div></div></div>';
+    
+    // Recommended Actions
+    html += '<div class="col-md-6">';
+    html += '<div class="card">';
+    html += '<div class="card-header">';
+    html += '<h6><i class="fas fa-tasks me-2"></i>Recommended Actions</h6>';
+    html += '</div>';
+    html += '<div class="card-body">';
+    html += '<ul class="list-unstyled small">';
+    html += '<li><i class="fas fa-check text-success me-2"></i>Complete leadership training program</li>';
+    html += '<li><i class="fas fa-check text-success me-2"></i>Take on project management role</li>';
+    html += '<li><i class="fas fa-check text-success me-2"></i>Pursue relevant certifications</li>';
+    html += '<li><i class="fas fa-check text-success me-2"></i>Seek mentorship opportunities</li>';
+    html += '</ul>';
+    html += '</div></div></div>';
+    
+    html += '</div></div></div>';
+    
+    resultsContent.innerHTML = html;
+}
+</script>
+{% endblock %}

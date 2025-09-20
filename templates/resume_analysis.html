@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Analysis - SkillBridge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-file-alt me-2"></i>Resume Analysis</h1>
+    <small class="text-muted">AI-Powered Skill Extraction</small>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-upload me-2"></i>Upload Resume</h5>
+            </div>
+            <div class="card-body">
+                <form id="resumeForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="employee_id" class="form-label">Select Employee</label>
+                        <select class="form-select" id="employee_id" name="employee_id" required>
+                            <option value="">Choose an employee...</option>
+                            {% for employee in employees %}
+                            <option value="{{ employee.id }}">{{ employee.name }} - {{ employee.role }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="resume_file" class="form-label">Resume File</label>
+                        <input type="file" class="form-control" id="resume_file" name="resume_file" 
+                               accept=".pdf,.docx,.txt" required>
+                        <div class="form-text">Supported formats: PDF, DOCX, TXT</div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-brain me-2"></i>Analyze Resume
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>How It Works</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-file-pdf text-danger me-2"></i>
+                        <strong>Document Processing:</strong> Extract text from PDF, DOCX, or TXT files
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-brain text-primary me-2"></i>
+                        <strong>NLP Analysis:</strong> Use spaCy and NLTK for skill extraction
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-tags text-success me-2"></i>
+                        <strong>Skill Categorization:</strong> Automatically categorize technical and soft skills
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-database text-info me-2"></i>
+                        <strong>Profile Update:</strong> Add extracted skills to employee profile
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4" id="resultsSection" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-bar me-2"></i>Analysis Results</h5>
+            </div>
+            <div class="card-body" id="resultsContent">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('resumeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const submitBtn = this.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Analyzing...';
+    submitBtn.disabled = true;
+    
+    fetch('/api/analyze-resume', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayResults(data.analysis);
+            document.getElementById('resultsSection').style.display = 'block';
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while analyzing the resume.');
+    })
+    .finally(() => {
+        // Reset button
+        submitBtn.innerHTML = '<i class="fas fa-brain me-2"></i>Analyze Resume';
+        submitBtn.disabled = false;
+    });
+});
+
+function displayResults(analysis) {
+    const resultsContent = document.getElementById('resultsContent');
+    
+    let html = '<div class="row">';
+    
+    // Skills section
+    if (analysis.skills && Object.keys(analysis.skills).length > 0) {
+        html += '<div class="col-md-6"><h6>Extracted Skills:</h6>';
+        for (const [category, skills] of Object.entries(analysis.skills)) {
+            html += `<div class="mb-3">
+                        <strong>${category}:</strong>
+                        <div class="mt-1">`;
+            skills.forEach(skill => {
+                html += `<span class="badge bg-secondary me-1 mb-1">${skill}</span>`;
+            });
+            html += '</div></div>';
+        }
+        html += '</div>';
+    }
+    
+    // Summary section
+    html += '<div class="col-md-6">';
+    html += '<h6>Analysis Summary:</h6>';
+    html += `<p><strong>Experience Years:</strong> ${analysis.experience_years || 'Not detected'}</p>`;
+    html += `<p><strong>Word Count:</strong> ${analysis.word_count || 0}</p>`;
+    html += `<p><strong>Education:</strong> ${analysis.education ? analysis.education.join(', ') : 'Not detected'}</p>`;
+    
+    if (analysis.certifications && analysis.certifications.length > 0) {
+        html += '<p><strong>Certifications:</strong></p><ul>';
+        analysis.certifications.forEach(cert => {
+            html += `<li>${cert}</li>`;
+        });
+        html += '</ul>';
+    }
+    
+    html += '</div></div>';
+    
+    resultsContent.innerHTML = html;
+}
+</script>
+{% endblock %}

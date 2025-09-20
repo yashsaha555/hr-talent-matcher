@@ -56,20 +56,39 @@
             <div class="card-body">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        AI-Powered Skill Matching
-                        <span class="badge bg-primary rounded-pill">Active</span>
+                        <div>
+                            <strong>NLP Resume Analysis</strong>
+                            <br><small class="text-muted">Extract skills from PDF/DOCX resumes</small>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">AI</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Career Development Paths
-                        <span class="badge bg-success rounded-pill">Active</span>
+                        <div>
+                            <strong>Performance Prediction</strong>
+                            <br><small class="text-muted">ML-based success forecasting</small>
+                        </div>
+                        <span class="badge bg-success rounded-pill">ML</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Skill Gap Analysis
-                        <span class="badge bg-info rounded-pill">Active</span>
+                        <div>
+                            <strong>Team Optimization</strong>
+                            <br><small class="text-muted">Constraint-based staffing</small>
+                        </div>
+                        <span class="badge bg-info rounded-pill">AI</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        Project Recommendations
-                        <span class="badge bg-warning rounded-pill">Active</span>
+                        <div>
+                            <strong>Career Path Planning</strong>
+                            <br><small class="text-muted">Personalized development paths</small>
+                        </div>
+                        <span class="badge bg-warning rounded-pill">AI</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Training Recommendations</strong>
+                            <br><small class="text-muted">Skill gap-based learning</small>
+                        </div>
+                        <span class="badge bg-secondary rounded-pill">ML</span>
                     </li>
                 </ul>
             </div>
@@ -82,10 +101,10 @@
                 <h5><i class="fas fa-bridge me-2"></i>SkillBridge Algorithm</h5>
             </div>
             <div class="card-body">
-                <p class="mb-3">Our AI system uses multiple factors to match talent:</p>
+                <p class="mb-3">Our enhanced AI system uses multiple factors to match talent:</p>
                 <div class="progress-stacked mb-2">
-                    <div class="progress" role="progressbar" style="width: 45%">
-                        <div class="progress-bar bg-primary">Skill Match (45%)</div>
+                    <div class="progress" role="progressbar" style="width: 40%">
+                        <div class="progress-bar bg-primary">Skill Match (40%)</div>
                     </div>
                 </div>
                 <div class="progress-stacked mb-2">
@@ -99,11 +118,11 @@
                     </div>
                 </div>
                 <div class="progress-stacked mb-3">
-                    <div class="progress" role="progressbar" style="width: 10%">
-                        <div class="progress-bar bg-warning">Availability (10%)</div>
-                    </div>
+                    <div class="progress" role="progressbar" style="width: 15%">
+                        <div class="progress-bar bg-warning">Availability (15%)</div>
+                    </div>  
                 </div>
-                <p class="small text-muted">Algorithm uses TF-IDF vectorization, cosine similarity, and weighted scoring for optimal matches.</p>
+                <p class="small text-muted">Enhanced with NLP similarity, ML performance prediction, and comprehensive skill gap analysis.</p>
             </div>
         </div>
     </div>
@@ -117,19 +136,41 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <a href="{{ url_for('employees') }}" class="btn btn-primary w-100 mb-2">
                             <i class="fas fa-search me-2"></i>Find Employee Matches
                         </a>
                     </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('resume_analysis') }}" class="btn btn-success w-100 mb-2">
+                            <i class="fas fa-file-alt me-2"></i>Resume Analysis
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('team_optimization') }}" class="btn btn-info w-100 mb-2">
+                            <i class="fas fa-users-cog me-2"></i>Team Optimization
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('performance_prediction') }}" class="btn btn-warning w-100 mb-2">
+                            <i class="fas fa-chart-line me-2"></i>Performance Prediction
+                        </a>
+                    </div>
+                </div>
+                <div class="row mt-2">
                     <div class="col-md-4">
-                        <a href="{{ url_for('projects') }}" class="btn btn-success w-100 mb-2">
-                            <i class="fas fa-project-diagram me-2"></i>Match Project Team
+                        <a href="{{ url_for('career_planning') }}" class="btn btn-secondary w-100 mb-2">
+                            <i class="fas fa-route me-2"></i>Career Planning
                         </a>
                     </div>
                     <div class="col-md-4">
-                        <a href="{{ url_for('skills') }}" class="btn btn-info w-100 mb-2">
-                            <i class="fas fa-chart-bar me-2"></i>Analyze Skill Gaps
+                        <a href="{{ url_for('training_recommendations') }}" class="btn btn-dark w-100 mb-2">
+                            <i class="fas fa-graduation-cap me-2"></i>Training Recommendations
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ url_for('skills') }}" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-chart-bar me-2"></i>Skill Analytics
                         </a>
                     </div>
                 </div>

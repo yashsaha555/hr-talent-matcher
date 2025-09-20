@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Prediction - SkillBridge{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-chart-line me-2"></i>Performance Prediction</h1>
+    <small class="text-muted">ML-Powered Success Forecasting</small>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-calculator me-2"></i>Predict Performance</h5>
+            </div>
+            <div class="card-body">
+                <form id="predictionForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="employee_id" class="form-label">Select Employee</label>
+                                <select class="form-select" id="employee_id" name="employee_id" required>
+                                    <option value="">Choose an employee...</option>
+                                    {% for employee in employees %}
+                                    <option value="{{ employee.id }}">{{ employee.name }} - {{ employee.role }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="project_id" class="form-label">Select Project</label>
+                                <select class="form-select" id="project_id" name="project_id" required>
+                                    <option value="">Choose a project...</option>
+                                    {% for project in projects %}
+                                    <option value="{{ project.id }}">{{ project.project_name }} - {{ project.priority }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-magic me-2"></i>Predict Performance
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-lightbulb me-2"></i>AI Insights</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted">Our ML models analyze:</p>
+                <ul class="list-unstyled small">
+                    <li><i class="fas fa-check text-success me-2"></i>Skill compatibility</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Experience alignment</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Career goals match</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Historical performance</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Project complexity</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4" id="predictionResults" style="display: none;">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-pie me-2"></i>Prediction Results</h5>
+            </div>
+            <div class="card-body" id="resultsContent">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('predictionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const employeeId = formData.get('employee_id');
+    const projectId = formData.get('project_id');
+    const submitBtn = this.querySelector('button[type="submit"]');
+    
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Predicting...';
+    submitBtn.disabled = true;
+    
+    fetch(`/api/predict-performance?employee_id=${employeeId}&project_id=${projectId}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.overall_score !== undefined) {
+            displayPredictionResults(data);
+            document.getElementById('predictionResults').style.display = 'block';
+        } else {
+            alert('Error: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while predicting performance.');
+    })
+    .finally(() => {
+        // Reset button
+        submitBtn.innerHTML = '<i class="fas fa-magic me-2"></i>Predict Performance';
+        submitBtn.disabled = false;
+    });
+});
+
+function displayPredictionResults(data) {
+    const resultsContent = document.getElementById('resultsContent');
+    
+    let html = '<div class="row">';
+    
+    // Overall Score
+    html += '<div class="col-md-6">';
+    html += '<div class="text-center mb-4">';
+    html += '<h3>Overall Match Score</h3>';
+    const scorePercentage = Math.round(data.overall_score * 100);
+    const scoreColor = scorePercentage >= 80 ? 'success' : scorePercentage >= 60 ? 'warning' : 'danger';
+    html += `<div class="progress mb-2" style="height: 30px;">
+                <div class="progress-bar bg-${scoreColor}" role="progressbar" 
+                     style="width: ${scorePercentage}%" aria-valuenow="${scorePercentage}" 
+                     aria-valuemin="0" aria-valuemax="100">
+                    ${scorePercentage}%
+                </div>
+             </div>`;
+    html += `<p class="text-muted">${data.recommendation || 'No recommendation available'}</p>`;
+    html += '</div>';
+    
+    // Component Scores
+    html += '<h6>Component Scores:</h6>';
+    html += '<div class="row">';
+    
+    const components = [
+        { key: 'skill_match', label: 'Skill Match', color: 'primary' },
+        { key: 'experience_compatibility', label: 'Experience', color: 'success' },
+        { key: 'career_alignment', label: 'Career Alignment', color: 'info' },
+        { key: 'availability', label: 'Availability', color: 'warning' }
+    ];
+    
+    components.forEach(comp => {
+        if (data[comp.key] !== undefined) {
+            const compScore = Math.round(data[comp.key] * 100);
+            html += `<div class="col-6 mb-3">
+                        <small>${comp.label}</small>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-${comp.color}" role="progressbar" 
+                                 style="width: ${compScore}%">${compScore}%</div>
+                        </div>
+                     </div>`;
+        }
+    });
+    
+    html += '</div></div>';
+    
+    // Skill Gap Analysis
+    if (data.skill_gap_analysis) {
+        html += '<div class="col-md-6">';
+        html += '<h6>Skill Gap Analysis:</h6>';
+        
+        const gaps = data.skill_gap_analysis;
+        if (gaps.strengths && gaps.strengths.length > 0) {
+            html += '<div class="mb-3">';
+            html += '<strong class="text-success">Strengths:</strong><br>';
+            gaps.strengths.forEach(strength => {
+                html += `<span class="badge bg-success me-1 mb-1">${strength.skill}</span>`;
+            });
+            html += '</div>';
+        }
+        
+        if (gaps.gaps && gaps.gaps.length > 0) {
+            html += '<div class="mb-3">';
+            html += '<strong class="text-warning">Areas for Improvement:</strong><br>';
+            gaps.gaps.forEach(gap => {
+                const gapClass = gap.status === 'missing_skill' ? 'danger' : 'warning';
+                html += `<span class="badge bg-${gapClass} me-1 mb-1" title="Gap: ${gap.gap} levels">${gap.skill}</span>`;
+            });
+            html += '</div>';
+        }
+        
+        html += '</div>';
+    }
+    
+    html += '</div>';
+    
+    // Additional Insights
+    if (data.performance_prediction || data.success_probability) {
+        html += '<div class="row mt-4">';
+        html += '<div class="col-12">';
+        html += '<h6>AI Predictions:</h6>';
+        html += '<div class="row">';
+        
+        if (data.performance_prediction) {
+            html += `<div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Predicted Performance</h5>
+                                <h3 class="text-primary">${data.performance_prediction.toFixed(1)}/5.0</h3>
+                            </div>
+                        </div>
+                     </div>`;
+        }
+        
+        if (data.success_probability) {
+            html += `<div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Success Probability</h5>
+                                <h3 class="text-success">${Math.round(data.success_probability * 100)}%</h3>
+                            </div>
+                        </div>
+                     </div>`;
+        }
+        
+        html += '</div></div></div>';
+    }
+    
+    resultsContent.innerHTML = html;
+}
+</script>
+{% endblock %}
