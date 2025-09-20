@@ -511,6 +511,11 @@ def initialize_database():
             return
 
         try:
+            # Create ID mapping dictionaries
+            employee_id_map = {}
+            skill_id_map = {}
+            project_id_map = {}
+
             # Load and insert employees
             employees_df = pd.read_csv('employees_data.csv')
             for _, row in employees_df.iterrows():
@@ -524,6 +529,8 @@ def initialize_database():
                     career_aspirations=row['career_aspirations']
                 )
                 db.session.add(employee)
+                db.session.flush()  # Get the auto-generated ID
+                employee_id_map[row['employee_id']] = employee.id
 
             # Load and insert skills
             skills_df = pd.read_csv('skills_data.csv')
@@ -533,6 +540,8 @@ def initialize_database():
                     category=row['category']
                 )
                 db.session.add(skill)
+                db.session.flush()  # Get the auto-generated ID
+                skill_id_map[row['skill_id']] = skill.id
 
             # Load and insert projects
             projects_df = pd.read_csv('projects_data.csv')
@@ -546,6 +555,8 @@ def initialize_database():
                     status=row['status']
                 )
                 db.session.add(project)
+                db.session.flush()  # Get the auto-generated ID
+                project_id_map[row['project_id']] = project.id
 
             # Load and insert development paths
             dev_paths_df = pd.read_csv('development_paths_data.csv')
@@ -561,27 +572,37 @@ def initialize_database():
             # Commit all the basic data first
             db.session.commit()
 
-            # Load and insert employee skills
+            # Load and insert employee skills using mapped IDs
             emp_skills_df = pd.read_csv('employee_skills_data.csv')
             for _, row in emp_skills_df.iterrows():
-                emp_skill = EmployeeSkill(
-                    employee_id=row['employee_id'],
-                    skill_id=row['skill_id'],
-                    proficiency_level=row['proficiency_level'],
-                    years_experience=row['years_experience']
-                )
-                db.session.add(emp_skill)
+                # Map CSV IDs to actual database IDs
+                actual_employee_id = employee_id_map.get(int(row['employee_id']))
+                actual_skill_id = skill_id_map.get(int(row['skill_id']))
+                
+                if actual_employee_id and actual_skill_id:
+                    emp_skill = EmployeeSkill(
+                        employee_id=actual_employee_id,
+                        skill_id=actual_skill_id,
+                        proficiency_level=int(row['proficiency_level']),
+                        years_experience=int(row['years_experience'])
+                    )
+                    db.session.add(emp_skill)
 
-            # Load and insert project skills
+            # Load and insert project skills using mapped IDs
             proj_skills_df = pd.read_csv('project_skills_data.csv')
             for _, row in proj_skills_df.iterrows():
-                proj_skill = ProjectSkill(
-                    project_id=row['project_id'],
-                    skill_id=row['skill_id'],
-                    importance_level=row['importance_level'],
-                    required_proficiency=row['required_proficiency']
-                )
-                db.session.add(proj_skill)
+                # Map CSV IDs to actual database IDs
+                actual_project_id = project_id_map.get(int(row['project_id']))
+                actual_skill_id = skill_id_map.get(int(row['skill_id']))
+                
+                if actual_project_id and actual_skill_id:
+                    proj_skill = ProjectSkill(
+                        project_id=actual_project_id,
+                        skill_id=actual_skill_id,
+                        importance_level=int(row['importance_level']),
+                        required_proficiency=int(row['required_proficiency'])
+                    )
+                    db.session.add(proj_skill)
 
             db.session.commit()
             print("Database initialized successfully with sample data!")
