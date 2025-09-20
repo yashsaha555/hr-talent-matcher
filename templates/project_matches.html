@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
-{% block title %}Project Matches - {{ project.project_name }}{% endblock %}
+{% block title %}Project Matches - SkillBridge{% endblock %}
 
 {% block content %}
 <div class="mb-4">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('projects') }}">Projects</a></li>
+            <li class="breadcrumb-item active">SkillBridge</li>
             <li class="breadcrumb-item active">{{ project.project_name }}</li>
         </ol>
     </nav>
