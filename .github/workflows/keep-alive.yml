@@ -10,4 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Curl Render App
-        run: curl -s https://hr-talent-matcher.onrender.com > /dev/null
+        run: curl -s --max-time 15 https://hr-talent-matcher.onrender.com > /dev/null || true
+
