@@ -10,7 +10,7 @@ This is a comprehensive AI-powered talent matching and development system built 
 - **Multi-factor Analysis**: Combines skill matching, experience compatibility, career alignment, and availability
 - **Weighted Scoring**: Configurable weights for different matching criteria
 - **Semantic Analysis**: Uses TF-IDF vectorization and cosine similarity for text analysis
-- **Real-time Calculations**: Dynamic matching scores with detailed breakdowns
+- **Real-time Calculations**: Dynamic matching scores with detailed breakdowns.
 
 ### 📊 Skill Gap Analysis
 - **Detailed Gap Identification**: Identifies specific skill gaps and proficiency levels
