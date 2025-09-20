@@ -14,6 +14,10 @@ import pickle
 import warnings
 warnings.filterwarnings('ignore')
 
+# Import utilities
+from utils.api_utils import *
+from utils.db_utils import *
+
 # Initialize Flask app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hr_talent_matching.db'
@@ -517,7 +521,7 @@ def initialize_database():
             project_id_map = {}
 
             # Load and insert employees
-            employees_df = pd.read_csv('employees_data.csv')
+            employees_df = pd.read_csv('data/csv/employees_data.csv')
             for _, row in employees_df.iterrows():
                 employee = Employee(
                     name=row['name'],
@@ -533,7 +537,7 @@ def initialize_database():
                 employee_id_map[row['employee_id']] = employee.id
 
             # Load and insert skills
-            skills_df = pd.read_csv('skills_data.csv')
+            skills_df = pd.read_csv('data/csv/skills_data.csv')
             for _, row in skills_df.iterrows():
                 skill = Skill(
                     skill_name=row['skill_name'],
@@ -544,7 +548,7 @@ def initialize_database():
                 skill_id_map[row['skill_id']] = skill.id
 
             # Load and insert projects
-            projects_df = pd.read_csv('projects_data.csv')
+            projects_df = pd.read_csv('data/csv/projects_data.csv')
             for _, row in projects_df.iterrows():
                 project = Project(
                     project_name=row['project_name'],
@@ -559,7 +563,7 @@ def initialize_database():
                 project_id_map[row['project_id']] = project.id
 
             # Load and insert development paths
-            dev_paths_df = pd.read_csv('development_paths_data.csv')
+            dev_paths_df = pd.read_csv('data/csv/development_paths_data.csv')
             for _, row in dev_paths_df.iterrows():
                 dev_path = DevelopmentPath(
                     path_name=row['path_name'],
@@ -573,7 +577,7 @@ def initialize_database():
             db.session.commit()
 
             # Load and insert employee skills using mapped IDs
-            emp_skills_df = pd.read_csv('employee_skills_data.csv')
+            emp_skills_df = pd.read_csv('data/csv/employee_skills_data.csv')
             for _, row in emp_skills_df.iterrows():
                 # Map CSV IDs to actual database IDs
                 actual_employee_id = employee_id_map.get(int(row['employee_id']))
@@ -589,7 +593,7 @@ def initialize_database():
                     db.session.add(emp_skill)
 
             # Load and insert project skills using mapped IDs
-            proj_skills_df = pd.read_csv('project_skills_data.csv')
+            proj_skills_df = pd.read_csv('data/csv/project_skills_data.csv')
             for _, row in proj_skills_df.iterrows():
                 # Map CSV IDs to actual database IDs
                 actual_project_id = project_id_map.get(int(row['project_id']))
